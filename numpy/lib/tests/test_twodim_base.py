@@ -237,6 +237,24 @@ class TestRot90(TestCase):
 
         assert_equal(rot90(a, axes=(2, 0)), a_rot90_20,err_msg=str(rot90(a, axes=(2, 0))))
 
+    def test_rotation_plane_180(self):
+        a = np.arange(8).reshape((2,2,2))
+        a_rot90_20 = [[[4, 0],
+                       [6, 2]],
+                      [[5, 1],
+                       [7, 3]]]
+
+        assert_equal(rot90(a, k=2, axes=(2, 0)), rot90(a_rot90_20, axes=(2, 0)),err_msg=str(rot90(a, k=2, axes=(2, 0))))
+
+    def test_rotation_plane_270(self):
+        a = np.arange(8).reshape((2,2,2))
+        a_rot90_20 = [[[4, 0],
+                       [6, 2]],
+                      [[5, 1],
+                       [7, 3]]]
+
+        assert_equal(rot90(a, k=3, axes=(2, 0)), rot90(a_rot90_20, k=2, axes=(2, 0)),err_msg=str(rot90(a, k=2, axes=(2, 0))))
+
 
 
 class TestHistogram2d(TestCase):
