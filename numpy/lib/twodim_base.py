@@ -177,7 +177,6 @@ def rot90(m, k=1, axes=(0,1)):
     m = asanyarray(m)
     m.swapaxes(0,axes[0])
     m.swapaxes(1,axes[1])
-    result = []
     if m.ndim < 2:
         raise ValueError("Input must >= 2-d.")
     k = k % 4
