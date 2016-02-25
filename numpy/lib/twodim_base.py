@@ -10,8 +10,8 @@ from numpy.core.numeric import (
 from numpy.core import iinfo, take, transpose
 
 __all__ = [
-    'diag', 'diagflat', 'eye', 'fliplr', 'flipud', 'rot90', 'tri', 'triu',
-    'tril', 'vander', 'histogram2d', 'mask_indices', 'tril_indices',
+    'diag', 'diagflat', 'eye', 'flip', 'fliplr', 'flipud', 'rot90', 'tri', 
+    'triu', 'tril', 'vander', 'histogram2d', 'mask_indices', 'tril_indices',
     'tril_indices_from', 'triu_indices', 'triu_indices_from', ]
 
 
@@ -176,42 +176,25 @@ def rot90(m, k=1, axes=(0,1)):
     m = asanyarray(m)
     m_copy = m.copy()
 
-    m.swapaxes(0,axes[0])
-    m.swapaxes(1,axes[1])
     if m.ndim < 2:
         raise ValueError("Input must >= 2-d.")
-    k = k % 4
-#     if k == 1
-#     B = flip(A,2);
-#     B = permute(B,[2 1 3:ndims(A)]);
-# elseif k == 2
-#     B = flip(flip(A,1),2);
-# elseif k == 3
-#     B = permute(A,[2 1 3:ndims(A)]);
-#     B = flip(B,2);
-# elseif k == 0
-#     B = A;
-# else
 
-    #[1,2,3,4,5]
-    #[5,2,3,4,1]
+    k = k % 4
     dim_list = arange(0,m.ndim)
-    dim_list[axes[0]], dim_list[axes[1]] = dim_list[axes[1]], dim_list[axes[0]] + 0
+    dim_list[axes[0]], dim_list[axes[1]] = dim_list[axes[1]], dim_list[axes[0]]
 
     if k == 0:
         result = m
     elif k == 1:
-        m = flip(m,2)
+        m = flip(m,axes[1])
         result = transpose(m, dim_list)
     elif k == 2:
         result = flip(flip(m, axes[0]), axes[1])
     else:
         # k == 3
         m = transpose(m, dim_list)
-        result = flip(m,2)
+        result = flip(m, axes[1])
 
-    # result.swapaxes(0, axes[0])
-    # result.swapaxes(1, axes[1])
     return result
 
 
