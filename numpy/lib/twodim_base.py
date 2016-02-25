@@ -7,8 +7,7 @@ from numpy.core.numeric import (
     asanyarray, arange, zeros, greater_equal, multiply, ones, asarray,
     where, int8, int16, int32, int64, empty, promote_types, diagonal,
     rollaxis)
-from numpy.core import iinfo
-
+from numpy.core import iinfo, take, transpose
 
 __all__ = [
     'diag', 'diagflat', 'eye', 'fliplr', 'flipud', 'rot90', 'tri', 'triu',
@@ -175,24 +174,55 @@ def rot90(m, k=1, axes=(0,1)):
 
     """
     m = asanyarray(m)
+    m_copy = m.copy()
+
     m.swapaxes(0,axes[0])
     m.swapaxes(1,axes[1])
     if m.ndim < 2:
         raise ValueError("Input must >= 2-d.")
     k = k % 4
+#     if k == 1
+#     B = flip(A,2);
+#     B = permute(B,[2 1 3:ndims(A)]);
+# elseif k == 2
+#     B = flip(flip(A,1),2);
+# elseif k == 3
+#     B = permute(A,[2 1 3:ndims(A)]);
+#     B = flip(B,2);
+# elseif k == 0
+#     B = A;
+# else
+
+    #[1,2,3,4,5]
+    #[5,2,3,4,1]
+    dim_list = arange(0,m.ndim)
+    dim_list[axes[0]], dim_list[axes[1]] = dim_list[axes[1]], dim_list[axes[0]] + 0
+
     if k == 0:
         result = m
     elif k == 1:
-        result = fliplr(m).swapaxes(0, 1)
+        m = flip(m,2)
+        result = transpose(m, dim_list)
     elif k == 2:
-        result = fliplr(flipud(m))
+        result = flip(flip(m, axes[0]), axes[1])
     else:
         # k == 3
-        result = fliplr(m.swapaxes(0, 1))
+        m = transpose(m, dim_list)
+        result = flip(m,2)
 
-    m.swapaxes(0, axes[0])
-    m.swapaxes(1, axes[1])
+    # result.swapaxes(0, axes[0])
+    # result.swapaxes(1, axes[1])
     return result
+
+
+def flip(m, axis):
+    if axis >= m.ndim:
+        raise ValueError("The specified axis must be larger than m.ndim")
+    m = asarray(m).swapaxes(axis, 0)
+    m = m[::-1,...]
+    m = m.swapaxes(0, axis)
+    return m
+
 
 def eye(N, M=None, k=0, dtype=float):
     """
