@@ -199,6 +199,31 @@ class TestRot90(TestCase):
         a = ones((50, 40, 3))
         assert_equal(rot90(a).shape, (40, 50, 3))
 
+    def test_rotation_planes(self):
+        a = np.arange(8).reshape((2,2,2))
+        a_rot90_01 = [[[2, 3],
+                       [6, 7]],
+                      [[0, 1],
+                       [4, 5]]]
+        a_rot90_12 = [[[1, 3],
+                       [0, 2]],
+                      [[5, 7],
+                       [4, 6]]]
+        a_rot90_20 = [[[4, 0],
+                       [6, 2]],
+                      [[5, 1],
+                       [7, 3]]]
+        a_rot90_10 = [[[4, 5],
+                       [0, 1]],
+                      [[6, 7],
+                       [2, 3]]]
+
+        asser_equal(rot90(a, p=(0, 1)), a_rot90_01)
+        asser_equal(rot90(a, p=(1, 2)), a_rot90_12)
+        asser_equal(rot90(a, p=(2, 0)), a_rot90_20)
+        asser_equal(rot90(a, p=(1, 0)), a_rot90_10)
+
+
 
 class TestHistogram2d(TestCase):
     def test_simple(self):
