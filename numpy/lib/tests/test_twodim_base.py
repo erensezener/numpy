@@ -218,10 +218,10 @@ class TestRot90(TestCase):
                       [[6, 7],
                        [2, 3]]]
 
-        asser_equal(rot90(a, p=(0, 1)), a_rot90_01)
-        asser_equal(rot90(a, p=(1, 2)), a_rot90_12)
-        asser_equal(rot90(a, p=(2, 0)), a_rot90_20)
-        asser_equal(rot90(a, p=(1, 0)), a_rot90_10)
+        assert_equal(rot90(a, axes=(0, 1)), a_rot90_01)
+        assert_equal(rot90(a, axes=(1, 2)), a_rot90_12)
+        assert_equal(rot90(a, axes=(2, 0)), a_rot90_20)
+        assert_equal(rot90(a, axes=(1, 0)), a_rot90_10)
 
 
 
