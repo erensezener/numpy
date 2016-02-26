@@ -6,7 +6,7 @@ from __future__ import division, absolute_import, print_function
 from numpy.core.numeric import (
     asanyarray, arange, zeros, greater_equal, multiply, ones, asarray,
     where, int8, int16, int32, int64, empty, promote_types, diagonal,
-    )
+    rollaxis)
 from numpy.core import iinfo
 
 
@@ -136,7 +136,7 @@ def flipud(m):
     return m[::-1, ...]
 
 
-def rot90(m, k=1):
+def rot90(m, k=1, axes=(0,1)):
     """
     Rotate an array by 90 degrees in the counter-clockwise direction.
 
@@ -175,19 +175,24 @@ def rot90(m, k=1):
 
     """
     m = asanyarray(m)
+    m.swapaxes(0,axes[0])
+    m.swapaxes(1,axes[1])
     if m.ndim < 2:
         raise ValueError("Input must >= 2-d.")
     k = k % 4
     if k == 0:
-        return m
+        result = m
     elif k == 1:
-        return fliplr(m).swapaxes(0, 1)
+        result = fliplr(m).swapaxes(0, 1)
     elif k == 2:
-        return fliplr(flipud(m))
+        result = fliplr(flipud(m))
     else:
         # k == 3
-        return fliplr(m.swapaxes(0, 1))
+        result = fliplr(m.swapaxes(0, 1))
 
+    m.swapaxes(0, axes[0])
+    m.swapaxes(1, axes[1])
+    return result
 
 def eye(N, M=None, k=0, dtype=float):
     """
