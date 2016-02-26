@@ -9,7 +9,7 @@ from numpy.testing import (
     )
 
 from numpy import (
-    arange, rot90, add, fliplr, flipud, zeros, ones, eye, array, diag,
+    arange, rot90, add, fliplr, flipud, flip, zeros, ones, eye, array, diag,
     histogram2d, tri, mask_indices, triu_indices, triu_indices_from,
     tril_indices, tril_indices_from, vander,
     )
@@ -167,6 +167,77 @@ class TestFlipud(TestCase):
         b = [[3, 4, 5],
              [0, 1, 2]]
         assert_equal(flipud(a), b)
+
+
+class TestFlip(TestCase):
+    def test_axes(self):
+        self.assertRaises(ValueError, flip, ones(4), axis=1)
+        self.assertRaises(ValueError, flip, ones((4, 4)), axis=2)
+
+    def test_basic_lr(self):
+        a = get_mat(4)
+        b = a[:, ::-1]
+        assert_equal(flip(a, 1), b)
+        a = [[0, 1, 2],
+             [3, 4, 5]]
+        b = [[2, 1, 0],
+             [5, 4, 3]]
+        assert_equal(flip(a, 1), b)
+
+    def test_basic_ud(self):
+        a = get_mat(4)
+        b = a[::-1, :]
+        assert_equal(flip(a, 0), b)
+        a = [[0, 1, 2],
+             [3, 4, 5]]
+        b = [[3, 4, 5],
+             [0, 1, 2]]
+        assert_equal(flip(a, 0), b)
+
+    def test_3d_swap_axis0(self):
+        a = array([[[0, 1],
+                    [2, 3]],
+
+                   [[4, 5],
+                    [6, 7]]])
+
+        b = array([[[4, 5],
+                    [6, 7]],
+
+                   [[0, 1],
+                    [2, 3]]])
+
+        assert_equal(flip(a, 0), b)
+
+    def test_3d_swap_axis1(self):
+        a = array([[[0, 1],
+                    [2, 3]],
+
+                   [[4, 5],
+                    [6, 7]]])
+
+        b = array([[[2, 3],
+                    [0, 1]],
+
+                   [[6, 7],
+                    [4, 5]]])
+
+        assert_equal(flip(a, 1), b)
+
+    def test_3d_swap_axis2(self):
+        a = array([[[0, 1],
+                    [2, 3]],
+
+                   [[4, 5],
+                    [6, 7]]])
+
+        b = array([[[1, 0],
+                    [3, 2]],
+
+                   [[5, 4],
+                    [7, 6]]])
+
+        assert_equal(flip(a, 2), b)
 
 
 class TestRot90(TestCase):
